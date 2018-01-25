@@ -17,7 +17,7 @@ object Form1: TForm1
   OnMouseMove = FormMouseMove
   Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '1.2.4.0'
+  LCLVersion = '1.8.0.6'
   object StaticText1: TStaticText
     Left = 145
     Height = 23

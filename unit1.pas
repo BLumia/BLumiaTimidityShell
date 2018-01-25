@@ -125,11 +125,13 @@ type
     procedure updateInit;
     function playFormPath(path:string):Boolean;
     function convFormPath(path:string):Boolean;
+    procedure convFileToWav(path:string; outToMemo: Boolean);
     procedure ClearCusSf2List;
     procedure ReflashListFormCfg;
     function RefreshList: boolean;
     Function ResumeProcess(ProcessID: DWORD): Boolean;
     function SuspendProcess(PID:DWORD):Boolean;
+    function CheckFileExt(FileName, FileExt: string): Boolean;
     function FileList(Path,FileExt:string):TStringList ;
     {function MidiTotalTime(MidiFilePath:string):Double;   //time length }
   private
@@ -243,17 +245,22 @@ procedure TForm1.play;
 var
   proc: TProcess;
   pth: string;
-  p: PChar;
+  args: TStringList;
+  //p: PChar;
 begin
   //Timer part
   sec:=0; min:=0;
   Timer1.Enabled:=true;
   //Main part
   pth := ExtractFilePath(ParamStr(0));
-  p := PChar(pth + 'timidity.exe "' + filename + '" -Od');
-  //p := PChar(pth + 'timidity.exe "' + filename); 其实这个和上面那个没区别= =
+  //p := PChar(pth + 'timidity.exe "' + filename + '" -Od');
   proc := TProcess.Create(nil);
-  proc.CommandLine := p;
+  proc.Executable := PChar(pth + 'timidity.exe');
+  args := TStringList.Create;
+  args.Add(filename);
+  args.Add('-Od');
+  proc.Parameters := args;
+  //proc.CommandLine := p;
   proc.Options := proc.Options + [poNoConsole, poUsePipes];
   proc.Execute;
   delay(500);
@@ -270,15 +277,21 @@ end;
 procedure TForm1.stop;
 var
   proc: TProcess;
-  p: PChar;
+  args: TStringList;
 begin
   //Timer part
   sec:=0; min:=0;
   Timer1.Enabled:=false;
   //Main Part
-  p := PChar('taskkill.exe /f /im timidity.exe');
+  //p := PChar('taskkill.exe /f /im timidity.exe');
+  args := TStringList.Create;
+  args.Add('/f');
+  args.Add('/im');
+  args.Add('timidity.exe');
   proc := TProcess.Create(nil);
-  proc.CommandLine := p;
+  //proc.CommandLine := p;
+  proc.Executable:= PChar('taskkill.exe');
+  proc.Parameters := args;
   proc.Options := [poNoConsole];
   proc.Execute;
   proc.Free;
@@ -369,12 +382,11 @@ end;
 
 procedure TForm1.MenuItem10Click(Sender: TObject);
 var
-  sfn, ts: string;
+  sfn: string;
 begin
   OpenDialog2.Execute;
   sfn := OpenDialog2.FileName;
-  ts := copy(sfn, length(sfn) - 3, 4);
-  if ((ts <> '.sf2') and (ts <> '.SF2')) then
+  if not CheckFileExt(sfn, '.sf2') then
     exit;
   ModifySF(sfn);
   MenuItem8.Checked := False;
@@ -397,26 +409,16 @@ begin
 end;
 
 procedure TForm1.MenuItem12Click(Sender: TObject);
-var
-  pth: string;
-  p: PChar;
-  proc: TProcess;
 begin
   Button3.Enabled := False;
-  Button3.Caption := 'Converting...';
+  if chs then Button3.Caption := '转换中...'
+  else Button3.Caption := 'Converting...';
   MenuItem12.Enabled := False;
-  pth := ExtractFilePath(ParamStr(0));
-  p := PChar(pth + 'timidity.exe "' + filename + '" -Ow');
-  proc := TProcess.Create(nil);
-  proc.CommandLine := p;
-  proc.Options := [poNoConsole, poUsePipes];
-  proc.Execute;
-  delay(500);
-  Memo1.Lines.LoadFromStream(proc.Output);
-  proc.Free;
+  convFileToWav(filename, true);
   while RefreshList do
     delay(100);
-  Button3.Caption := 'Convert to Wav';
+  if chs then Button3.Caption := '转换为wav格式'
+  else Button3.Caption := 'Convert to Wav';
   Button3.Enabled := True;
   MenuItem12.Enabled := True;
 end;
@@ -438,7 +440,7 @@ begin
   hc := hc + '本播放器支持播放列表功能，你可以通过文件夹的方式方便的导入你的mid文件'+ #10;
   hc := hc + '您也能通过这个方式批量转换mid到wav格式。你可以通过Insert和Delete键调整列表。'
     + #10 + #10;
-  hc := hc + '访问blog.blumia.cn获取软件更新以及更多同同开发者应用。';
+  hc := hc + '访问blog.blumia.net获取软件更新以及更多同同开发者应用。';
   end else begin
   hc := 'BLumia''s Timidity Shell Help' + #10;
   hc := hc + 'You can open a file by dropping a file into this application or use File-Open'
@@ -626,16 +628,13 @@ begin
 end;
 
 procedure TForm1.MenuItem2Click(Sender: TObject);
-var
-  ts: string;
 begin
   //PlayTimerStuff
   StaticText2.Caption:='00:00';
   //mian stuff
   OpenDialog1.Execute;
   filename := utf8toansi(OpenDialog1.FileName);
-  ts := copy(filename, length(filename) - 3, 4);
-  if ((ts <> '.mid') and (ts <> '.MID')) then
+  if not CheckFileExt(filename, '.mid') then
     exit;
   Label1.Caption := 'Path: '+ExtractFilePath(ansitoutf8(filename));
   Label1.Hint := ansitoutf8(filename);
@@ -871,35 +870,35 @@ begin
   if FileExists(pchar('.\playerConfig.ini')) then
   begin
     haveInifile:=True;
-     CnfFile := Tinifile.Create('.\playerConfig.ini');
-     if (cnffile.readstring('Config','autoPlayDrop','1')='1') then
-     begin
-        pdf := True;
-        MenuItem5.Checked := True;
-     end else begin
-       pdf := False;
-       MenuItem5.Checked := False;
-     end;
-     if (cnffile.readstring('Config','autoRepeat','1')='1') then
-     begin
-        aaa := True;
-        MenuItem17.Checked := True;
-     end else begin
-       aaa := False;
-       MenuItem17.Checked := False;
-     end;
-     if (cnffile.readstring('Config','useAero','1')='1') then
-     begin
-       useAero := True;
-       MenuItem26.Checked := True;
-     end else begin
-       useAero := False;
-       MenuItem26.Checked := False;
-     end;
-     sf2countlog:= cnffile.readinteger('Advanced','sf2count',0);
-     chs:= cnffile.readbool('Config','languageCHS',False);
-     haveCusSf2:= cnffile.readinteger('Advanced','haveCusSf2',0);
-     loadHistorySf2:= cnffile.readinteger('Advanced','loadHistorySf2',0);
+    CnfFile := Tinifile.Create('.\playerConfig.ini');
+    if (cnffile.readstring('Config','autoPlayDrop','1')='1') then
+    begin
+       pdf := True;
+       MenuItem5.Checked := True;
+    end else begin
+      pdf := False;
+      MenuItem5.Checked := False;
+    end;
+    if (cnffile.readstring('Config','autoRepeat','1')='1') then
+    begin
+       aaa := True;
+       MenuItem17.Checked := True;
+    end else begin
+      aaa := False;
+      MenuItem17.Checked := False;
+    end;
+    if (cnffile.readstring('Config','useAero','1')='1') then
+    begin
+      useAero := True;
+      MenuItem26.Checked := True;
+    end else begin
+      useAero := False;
+      MenuItem26.Checked := False;
+    end;
+    sf2countlog:= cnffile.readinteger('Advanced','sf2count',0);
+    chs:= cnffile.readbool('Config','languageCHS',False);
+    haveCusSf2:= cnffile.readinteger('Advanced','haveCusSf2',0);
+    loadHistorySf2:= cnffile.readinteger('Advanced','loadHistorySf2',0);
   end;
 
   if not FileExists('.\timidity.exe') then begin
@@ -913,8 +912,8 @@ begin
        reset(ttext);
     end
     else begin
-    showmessage('This program cannot be execused without timidity.cfg.Program will be closed!');
-    halt;
+      showmessage('This program cannot be execused without timidity.cfg. Program will be closed!');
+      halt;
     end;
   end
   else reset(ttext);
@@ -1035,13 +1034,13 @@ begin
   if paramcount>0 then begin
   //showmessage(pchar(ansitoutf8(paramstr(1))));
      if FileExists(pchar(paramstr(1))) then begin
-        if ExtractFileExt(paramstr(1))='.mid' then begin
+        if CheckFileExt(paramstr(1), '.mid') then begin
           filename := utf8toansi(ansitoutf8(paramstr(1)));
           //showmessage(filename);诶。。我说Lazarus啊。。这看上去一坨屎的ansi字符串您照样用诶。。
           Label1.Caption := 'Path: '+ExtractFilePath(ansitoutf8(filename));
           Label1.Hint := ansitoutf8(filename);
-          StaticText1.Caption := ansitoutf8(filename);
-          StaticText1.Hint := ansitoutf8(filename);
+          StaticText1.Caption := ExtractFileName(ansitoutf8(filename));
+          StaticText1.Hint := ExtractFileName(ansitoutf8(filename));
           Button1.Enabled := True;
           Button2.Enabled := False;
           Button3.Enabled := True;
@@ -1151,22 +1150,12 @@ begin
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
-var
-  pth: string;
-  p: PChar;
-  proc: TProcess;
 begin
   Button3.Enabled := False;
   if chs then Button3.Caption := '转换中...'
   else Button3.Caption := 'Converting...';
   MenuItem12.Enabled := False;
-  pth := ExtractFilePath(ParamStr(0));
-  p := PChar(pth + 'timidity.exe "' + filename + '" -Ow');
-  proc := TProcess.Create(nil);
-  proc.CommandLine := p;
-  proc.Options := [poNoConsole];
-  proc.Execute;
-  proc.Free;
+  convFileToWav(filename, true);
   while RefreshList do
     delay(100);
   if chs then Button3.Caption := '转换为wav格式'
@@ -1263,11 +1252,11 @@ begin
   ListBox2.Selected[ListBox1.ItemIndex]:=True;
   s:=listbox2.Items[listbox2.itemindex];
   while (ListBox1.ItemIndex <> (ListBox2.Items.Count-1)) and (stopv=0) do begin
-  if playFormPath(s) then begin
-    ListBox1.Selected[ListBox1.ItemIndex+1]:=True;
-    ListBox2.Selected[ListBox1.ItemIndex]:=True;
-    s:=listbox2.Items[listbox2.itemindex];
-  end;
+    if playFormPath(s) then begin
+      ListBox1.Selected[ListBox1.ItemIndex+1]:=True;
+      ListBox2.Selected[ListBox1.ItemIndex]:=True;
+      s:=listbox2.Items[listbox2.itemindex];
+    end;
   end;
   if stopv = 0 then begin
     if playFormPath(s) then exit;
@@ -1392,6 +1381,16 @@ begin
     until Thread32Next(hSnap, THR32) = FALSE;
     CloseHandle(hSnap);
   end;
+end;
+
+function TForm1.CheckFileExt(FileName, FileExt: string): Boolean;
+begin
+  // please do text encoding convert manually
+  Result := false;
+  FileExt := LowerCase(FileExt);
+  FileName := LowerCase(ExtractFileExt(FileName));
+  if (FileName = FileExt) then
+    Result := true;
 end;
 
 procedure TForm1.language2chs;
@@ -1534,62 +1533,74 @@ begin
 StaticText2.Caption:='00:00';
 //mian stuff
 filename := utf8toansi(path);
-if ExtractFileExt(ansitoutf8(filename)) <> '.mid' then exit;
-Label1.Caption := 'Path: '+ExtractFilePath(ansitoutf8(filename));
-Label1.Hint := ansitoutf8(filename);
-StaticText1.Caption := ExtractFileName(ansitoutf8(filename));
-StaticText1.Hint := ExtractFileName(ansitoutf8(filename));
-Button1.Enabled := True;
-Button4.Enabled := False;
-Button2.Enabled := False;
-Button3.Enabled := True;
-MenuItem12.Enabled := True;
-if RefreshList then
-begin
-  stop;
-  delay(500);
+if not CheckFileExt(ExtractFileExt(ansitoutf8(filename)), '.mid') then exit;
+  Label1.Caption := 'Path: '+ExtractFilePath(ansitoutf8(filename));
+  Label1.Hint := ansitoutf8(filename);
+  StaticText1.Caption := ExtractFileName(ansitoutf8(filename));
+  StaticText1.Hint := ExtractFileName(ansitoutf8(filename));
+  Button1.Enabled := True;
+  Button4.Enabled := False;
+  Button2.Enabled := False;
+  Button3.Enabled := True;
+  MenuItem12.Enabled := True;
+  if RefreshList then
+  begin
+    stop;
+    delay(500);
+  end;
+  onPlay:=1;
+  Button2.Enabled := True;
+  Button4.Enabled := True;
+  Button1.Enabled := False;
+  play;
+  Button1.Enabled := True;
+  Button2.Enabled := False;
+  exit(True)
 end;
-onPlay:=1;
-Button2.Enabled := True;
-Button4.Enabled := True;
-Button1.Enabled := False;
-play;
-Button1.Enabled := True;
-Button2.Enabled := False;
-exit(True)
+
+procedure TForm1.convFileToWav(path:string; outToMemo: Boolean);
+var
+  args: TStringList;
+  proc: TProcess;
+begin
+  //p := PChar(pth + 'timidity.exe "' + utf8toansi(path) + '" -Ow');
+  args := TStringList.Create;
+  args.Add(path);
+  args.Add('-Ow');
+  proc := TProcess.Create(nil);
+  proc.Executable:= PChar(ExtractFilePath(ParamStr(0)) + 'timidity.exe');
+  proc.Parameters:= args;
+  //proc.CommandLine := p;
+  proc.Options := [poNoConsole, poUsePipes];
+  proc.Execute;
+  if outToMemo then begin
+    delay(500);
+    Memo1.Lines.LoadFromStream(proc.Output);
+  end;
+  proc.Free;
 end;
 
 function TForm1.convFormPath(path:string):Boolean;
-var
-  pth: string;
-  p: PChar;
-  proc: TProcess;
 begin
   Button3.Enabled := False;
   Button7.Enabled := False;
   if chs then begin
-  Button3.Caption := '转换中...';
-  Button7.Caption := '转换中...';
+    Button3.Caption := '转换中...';
+    Button7.Caption := '转换中...';
   end else begin
-  Button3.Caption := 'Converting...';
-  Button7.Caption := 'Converting...';
+    Button3.Caption := 'Converting...';
+    Button7.Caption := 'Converting...';
   end;
   MenuItem12.Enabled := False;
-  pth := ExtractFilePath(ParamStr(0));
-  p := PChar(pth + 'timidity.exe "' + utf8toansi(path) + '" -Ow');
-  proc := TProcess.Create(nil);
-  proc.CommandLine := p;
-  proc.Options := [poNoConsole];
-  proc.Execute;
-  proc.Free;
+  convFileToWav(utf8toansi(path), false);
   while RefreshList do
     delay(100);
   if chs then begin
-  Button3.Caption := '转换为wav格式';
-  Button7.Caption := '批量格式转换';
+    Button3.Caption := '转换为wav格式';
+    Button7.Caption := '批量格式转换';
   end else begin
-  Button3.Caption := 'Convert to Wav';
-  Button7.Caption := 'Convert this List';
+    Button3.Caption := 'Convert to Wav';
+    Button7.Caption := 'Convert this List';
   end;
   Button3.Enabled := True;
   Button7.Enabled := True;
