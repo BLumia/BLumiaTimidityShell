@@ -440,7 +440,7 @@ begin
   hc := hc + '本播放器支持播放列表功能，你可以通过文件夹的方式方便的导入你的mid文件'+ #10;
   hc := hc + '您也能通过这个方式批量转换mid到wav格式。你可以通过Insert和Delete键调整列表。'
     + #10 + #10;
-  hc := hc + '访问blog.blumia.net获取软件更新以及更多同同开发者应用。';
+  hc := hc + '前往 https://github.com/BLumia/BLumiaTimidityShell 获得程序源码和更新。';
   end else begin
   hc := 'BLumia''s Timidity Shell Help' + #10;
   hc := hc + 'You can open a file by dropping a file into this application or use File-Open'
@@ -453,7 +453,7 @@ begin
     + #10+ #10;
   hc := hc + 'This Player support PlayList function. You can use this function to manager your midi files'
     + #10+ #10;
-  hc := hc + 'Visit blog.blumia.cn to focus update or other interesting stuff. XD';
+  hc := hc + 'Visit https://github.com/BLumia/BLumiaTimidityShell to grab source or other interesting stuff. XD';
   end;
   Application.MessageBox(PChar(hc), 'BLumia''s Timidity Help', 0);
 end;

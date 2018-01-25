@@ -9,6 +9,10 @@
       <Title Value="BLumia''s Timidity Shell"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
+      <XPManifest>
+        <TextName Value="Bear Kids Team. BLumia Timidity Shell"/>
+        <TextDesc Value="Simple timidity shell program for midi playback and batch midi->wav convert with timidity."/>
+      </XPManifest>
       <Icon Value="0"/>
     </General>
     <i18n>
