@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Buttons, ExtCtrls, Process, Inifiles, Windows, Menus,
-  jwaTlHelp32, Unit2, Unit3, glass, {bassmidi ,bass ,} JwaWinBase; //JwaWinBase for OpenThread()
+  jwaTlHelp32, Unit2, Unit3, glass, {bassmidi ,bass ,} JwaWinBase, //JwaWinBase for OpenThread()
+  RunOnce_PostIt;
 
 type
 
@@ -82,6 +83,7 @@ type
     procedure Button9Click(Sender: TObject);
     procedure FormClose(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure Label3Click(Sender: TObject);
@@ -113,6 +115,7 @@ type
     procedure ModifySF(sf: string);
     procedure language2chs;
     procedure language2eng;
+    procedure onCatchMessage;
     procedure Panel1Click(Sender: TObject);
     procedure Panel2Click(Sender: TObject);
     procedure play;
@@ -190,6 +193,40 @@ begin
   if menuitem11.Count>=1 then begin
    for i := menuitem11.Count downto 1 do
      menuitem11.items[i-1].destroy;
+  end;
+end;
+
+procedure TForm1.onCatchMessage;
+var
+  tmpFileName: string;
+begin
+  if TheMessage <> '' then begin
+    tmpFileName := utf8toansi(TheMessage);
+    if ExtractFileExt(ansitoutf8(filename)) <> '.mid' then exit;
+    filename := tmpFileName;
+    Label1.Caption := 'Path: '+ExtractFilePath(ansitoutf8(filename));
+    Label1.Hint := ansitoutf8(filename);
+    StaticText1.Caption := ExtractFileName(ansitoutf8(filename));
+    StaticText1.Hint := ExtractFileName(ansitoutf8(filename));
+    Button1.Enabled := True;
+    Button4.Enabled := False;
+    Button2.Enabled := False;
+    Button3.Enabled := True;
+    MenuItem12.Enabled := True;
+    if not pdf then          // TODO: not shared config to drop file.
+      exit;
+    if RefreshList then
+    begin
+      stop;
+      delay(500);
+    end;
+    onPlay:=1;
+    Button2.Enabled := True;
+    Button4.Enabled := True;
+    Button1.Enabled := False;
+    play;
+    Button1.Enabled := True;
+    Button2.Enabled := False;
   end;
 end;
 
@@ -823,29 +860,11 @@ var
   ts: string;
   tmpMargins: TMargins; //aero
   MenuItem:TMenuItem;   //temp soundfont menu item
-  ZAppName: array[0..127] of char;   //禁止多开所用
-  Hold: String;                      //禁止多开所用
-  Found: HWND;                       //禁止多开所用
-  isDebug:boolean;       //...
 begin
-
+  InitMessage(self);
+  StartMessage(@onCatchMessage, 1000); // 多开用
   //make sure something..
   setCurrentDirectory(PChar(ExtractFilePath(Application.EXEName)));
-  isDebug:=False;        //True or False
-  if not isDebug then begin
-     Hold := Application.Title;         //禁止多开所用
-     Application.Title := 'OnlyOne' + IntToStr(HInstance);
-     StrPCopy(ZAppName, Hold);
-     Found := FindWindow(nil, ZAppName);
-     Application.Title := Hold;
-     if Found<>0 then
-     begin
-        ShowWindow(Found, SW_RESTORE);
-        Application.Terminate;
-     end;
-
-     MenuItem28.Visible:=False;
-  end else showmessage('Debug Version!!');
   //init part by blumia
   stopv:= 0;//这是一个用于播放列表的变量，使在播放列表过程中可以通过按下Stop来停止播放
   pdf := False;
@@ -1067,6 +1086,11 @@ begin
      //showmessage('command paramstr not found');
   end;
 
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  FreeRunOnce;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
