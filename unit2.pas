@@ -5,7 +5,8 @@ unit Unit2;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Unit4;
 
 type
 
@@ -79,11 +80,12 @@ begin
 end;
 
 procedure TForm2.Button1Click(Sender: TObject);
-var ts,sfn:string;i:longint;
+var ts,sfn:string;
 begin
   OpenDialog1.Execute;
   sfn := OpenDialog1.FileName;
   ts := copy(sfn, length(sfn) - 3, 4);
+  if not CheckFileExt(sfn, '.sf2') then exit;
   if ((ts <> '.sf2') and (ts <> '.SF2')) then
     exit;
   inc(cnt);

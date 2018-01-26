@@ -23,9 +23,9 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="4"/>
-      <RevisionNr Value="1"/>
-      <BuildNr Value="121"/>
-      <StringTable CompanyName="GarySoft" FileDescription="BLumia's Timidity Shell" ProductName="BLumia's Timidity Shell" ProductVersion="1.3.4.120"/>
+      <RevisionNr Value="2"/>
+      <BuildNr Value="123"/>
+      <StringTable CompanyName="GarySoft" FileDescription="BLumia's Timidity Shell" ProductName="BLumia's Timidity Shell" ProductVersion="1.4.2.122"/>
     </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -45,7 +45,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="6">
       <Unit0>
         <Filename Value="timidityplayer.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -79,6 +79,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="RunOnce_PostIt"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="unit4.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Unit4"/>
+      </Unit5>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

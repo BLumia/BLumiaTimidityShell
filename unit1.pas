@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Buttons, ExtCtrls, Process, Inifiles, Windows, Menus,
   jwaTlHelp32, Unit2, Unit3, glass, {bassmidi ,bass ,} JwaWinBase, //JwaWinBase for OpenThread()
-  RunOnce_PostIt;
+  RunOnce_PostIt, Unit4;
 
 type
 
@@ -134,7 +134,6 @@ type
     function RefreshList: boolean;
     Function ResumeProcess(ProcessID: DWORD): Boolean;
     function SuspendProcess(PID:DWORD):Boolean;
-    function CheckFileExt(FileName, FileExt: string): Boolean;
     function FileList(Path,FileExt:string):TStringList ;
     {function MidiTotalTime(MidiFilePath:string):Double;   //time length }
   private
@@ -202,7 +201,7 @@ var
 begin
   if TheMessage <> '' then begin
     tmpFileName := utf8toansi(TheMessage);
-    if ExtractFileExt(ansitoutf8(filename)) <> '.mid' then exit;
+    if not CheckFileExt(ansitoutf8(filename), '.mid') then exit;
     filename := tmpFileName;
     Label1.Caption := 'Path: '+ExtractFilePath(ansitoutf8(filename));
     Label1.Hint := ansitoutf8(filename);
@@ -344,7 +343,7 @@ begin
   StaticText2.Caption:='00:00';
   //mian stuff
   filename := utf8toansi(FileNames[0]);
-  if ExtractFileExt(ansitoutf8(filename)) <> '.mid' then exit;
+  if not CheckFileExt(ansitoutf8(filename), '.mid') then exit;
   Label1.Caption := 'Path: '+ExtractFilePath(ansitoutf8(filename));
   Label1.Hint := ansitoutf8(filename);
   StaticText1.Caption := ExtractFileName(ansitoutf8(filename));
@@ -1405,16 +1404,6 @@ begin
     until Thread32Next(hSnap, THR32) = FALSE;
     CloseHandle(hSnap);
   end;
-end;
-
-function TForm1.CheckFileExt(FileName, FileExt: string): Boolean;
-begin
-  // please do text encoding convert manually
-  Result := false;
-  FileExt := LowerCase(FileExt);
-  FileName := LowerCase(ExtractFileExt(FileName));
-  if (FileName = FileExt) then
-    Result := true;
 end;
 
 procedure TForm1.language2chs;
