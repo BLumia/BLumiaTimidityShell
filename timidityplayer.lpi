@@ -24,7 +24,7 @@
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="4"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="124"/>
+      <BuildNr Value="125"/>
       <StringTable CompanyName="GarySoft" FileDescription="BLumia's Timidity Shell" ProductName="BLumia's Timidity Shell" ProductVersion="1.4.2.122"/>
     </VersionInfo>
     <BuildModes Count="1">

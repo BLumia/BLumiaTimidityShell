@@ -32,7 +32,7 @@ To compile it, just download [Lazarus IDE](https://www.lazarus-ide.org/) and ope
 
 ## 使用方法
 
-如果您自行编译，编译后直接把本程序和 `Timidity.exe` 放在一起就行了，然后运行本程序，照着提升做就行。同时会帮你生成 Timidity 所用的配置文件。当然，也可以配合 Timidity++ 使用。完全没有问题。
+如果您自行编译，编译后直接把本程序和 `Timidity.exe` 放在一起就行了，然后运行本程序，照着提示做就行。同时会帮你生成 Timidity 所用的配置文件。当然，也可以配合 Timidity++ 使用。完全没有问题。
 
 展开播放列表后可以添加文件到列表，播放列表主要目的是指定音源(SoundFont)后批量转换 mid 到 wav 用的。
 

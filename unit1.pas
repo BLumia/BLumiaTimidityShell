@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, Buttons, ExtCtrls, Process, Inifiles, Windows, Menus,
+  StdCtrls, Buttons, ExtCtrls, Process, UTF8Process, Inifiles, Windows, Menus,
   jwaTlHelp32, Unit2, Unit3, glass, {bassmidi ,bass ,} JwaWinBase, //JwaWinBase for OpenThread()
   RunOnce_PostIt, Unit4;
 
@@ -281,7 +281,7 @@ end;
 
 procedure TForm1.play;
 var
-  proc: TProcess;
+  proc: TProcessUTF8;
   pth: string;
   args: TStringList;
   //p: PChar;
@@ -292,7 +292,7 @@ begin
   //Main part
   pth := ExtractFilePath(ParamStr(0));
   //p := PChar(pth + 'timidity.exe "' + filename + '" -Od');
-  proc := TProcess.Create(nil);
+  proc := TProcessUTF8.Create(nil);
   proc.Executable := PChar(pth + 'timidity.exe');
   args := TStringList.Create;
   args.Add(filename);
@@ -314,7 +314,7 @@ end;
 
 procedure TForm1.stop;
 var
-  proc: TProcess;
+  proc: TProcessUTF8;
   args: TStringList;
 begin
   //Timer part
@@ -326,7 +326,7 @@ begin
   args.Add('/f');
   args.Add('/im');
   args.Add('timidity.exe');
-  proc := TProcess.Create(nil);
+  proc := TProcessUTF8.Create(nil);
   //proc.CommandLine := p;
   proc.Executable:= PChar('taskkill.exe');
   proc.Parameters := args;
@@ -1586,13 +1586,13 @@ end;
 procedure TForm1.convFileToWav(path:string; outToMemo: Boolean);
 var
   args: TStringList;
-  proc: TProcess;
+  proc: TProcessUTF8;
 begin
   //p := PChar(pth + 'timidity.exe "' + utf8toansi(path) + '" -Ow');
   args := TStringList.Create;
   args.Add(path);
   args.Add('-Ow');
-  proc := TProcess.Create(nil);
+  proc := TProcessUTF8.Create(nil);
   proc.Executable:= PChar(ExtractFilePath(ParamStr(0)) + 'timidity.exe');
   proc.Parameters:= args;
   //proc.CommandLine := p;
