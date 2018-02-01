@@ -45,7 +45,7 @@ object Form3: TForm3
     Height = 160
     Top = 48
     Width = 310
-    Caption = 'Version : Banana 122 - 20180126'#13#10'https://github.com/BLumia/BLumiaTimidityShell'#13#10'This program is based on a Chrisoft Opensource Project program which called “Chirsoft Timidity Player” and that program is based on Timidity.'#13#10'Bear kids are cute!!!!!'#13#10'Oh.. You can still enjoy Fearii Cirno''s humor on this program LOL.'#13#10'                                      BLumia (c) 2014'
+    Caption = 'Version : Banana 123 - 20180201'#13#10'https://github.com/BLumia/BLumiaTimidityShell'#13#10'This program is based on a Chrisoft Opensource Project program which called “Chirsoft Timidity Player” and that program is based on Timidity.'#13#10'Bear kids act cute!!!!!'#13#10'Oh.. You can still enjoy Fearii Cirno''s humor on this program LOL.'#13#10'                                      BLumia (c) 2014'
     TabOrder = 1
   end
   object Button1: TButton

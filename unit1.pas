@@ -81,6 +81,7 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -153,6 +154,7 @@ var
   min,sec,stopv:integer;              //Play Timer
   sf2count,sf2countlog:integer; //soundfont file in timidity.cfg count and history count
   haveCusSf2,loadHistorySf2:integer;//if cfg are using MSGS or TimiGS then load history cus sf2
+  runAfterFormShow: boolean;
 
 implementation
 
@@ -590,7 +592,7 @@ begin
   MenuItem26.Checked := not MenuItem26.Checked;
   useAero := not useAero;
   updateInit;
-  showmessage('Done.'+ #10+'Restart this program to apply changes.')
+  showmessage('Done.'+ #10+'Restart this program to apply changes.');
 end;
 
 procedure TForm1.MenuItem27Click(Sender: TObject);
@@ -881,6 +883,7 @@ begin
   haveCusSf2:=0;
   loadHistorySf2:=0;
   haveInifile:=False;
+  runAfterFormShow:=False;
   onPlay:=0;
   Form1.Width:=509;
   Form1.Height:=155;
@@ -1065,16 +1068,7 @@ begin
           MenuItem12.Enabled := True;
           if not pdf then
             exit;
-          if RefreshList then
-          begin
-            stop;
-            delay(500);
-          end;
-          Button2.Enabled := True;
-          Button1.Enabled := False;
-          play;
-          Button1.Enabled := True;
-          Button2.Enabled := False;
+          runAfterFormShow:=True;
         end else begin
           showmessage('This file is NOT a midi file') ;
         end
@@ -1331,6 +1325,24 @@ begin
   ListBox2.Items.LoadFromFile(ansitoutf8(ExtractFilePath(Application.ExeName))+'PlayList.btsl');
   for i:=0 to ListBox2.Items.Count-1 do
   listbox1.Items.add(ExtractFileName(ListBox2.Items[i]));
+end;
+
+procedure TForm1.FormActivate(Sender: TObject);
+begin
+  if runAfterFormShow then
+  begin
+    runAfterFormShow := False;
+    if RefreshList then
+    begin
+      stop;
+      delay(500);
+    end;
+    Button2.Enabled := True;
+    Button1.Enabled := False;
+    play;
+    Button1.Enabled := True;
+    Button2.Enabled := False;
+  end;
 end;
 
 procedure TForm1.FormClose(Sender: TObject);

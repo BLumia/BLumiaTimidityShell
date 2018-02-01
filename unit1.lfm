@@ -12,6 +12,7 @@ object Form1: TForm1
   Color = clWindow
   DesignTimePPI = 144
   Menu = MainMenu1
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
