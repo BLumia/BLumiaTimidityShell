@@ -24,11 +24,40 @@
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="4"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="125"/>
+      <BuildNr Value="126"/>
       <StringTable CompanyName="GarySoft" FileDescription="BLumia's Timidity Shell" ProductName="BLumia's Timidity Shell" ProductVersion="1.4.2.122"/>
     </VersionInfo>
-    <BuildModes Count="1">
-      <Item1 Name="Default" Default="True"/>
+    <BuildModes Count="2">
+      <Item1 Name="Release" Default="True"/>
+      <Item2 Name="Debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="timidityplayer"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <UseValgrind Value="True"/>
+              <StripSymbols Value="True"/>
+              <UseExternalDbgSyms Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item2>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>

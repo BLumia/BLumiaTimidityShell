@@ -1554,11 +1554,11 @@ end;
 
 function TForm1.playFormPath(path:string):Boolean;
 begin
-//PlayTimerStuff
-StaticText2.Caption:='00:00';
-//mian stuff
-filename := utf8toansi(path);
-if not CheckFileExt(ExtractFileExt(ansitoutf8(filename)), '.mid') then exit;
+  //PlayTimerStuff
+  StaticText2.Caption:='00:00';
+  //mian stuff
+  filename := utf8toansi(path);
+  if not CheckFileExt(ansitoutf8(filename), '.mid') then exit;
   Label1.Caption := 'Path: '+ExtractFilePath(ansitoutf8(filename));
   Label1.Hint := ansitoutf8(filename);
   StaticText1.Caption := ExtractFileName(ansitoutf8(filename));

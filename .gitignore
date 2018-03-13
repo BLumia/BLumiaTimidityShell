@@ -7,6 +7,10 @@ __history
 *.map
 *.exe
 *.dll
+*.ini
+*.cfg
+*.dbg
+*.sf2
 bin/*
 backup/*
 lib/*

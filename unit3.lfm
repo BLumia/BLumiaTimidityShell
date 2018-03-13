@@ -8,7 +8,6 @@ object Form3: TForm3
   ClientHeight = 211
   ClientWidth = 578
   Color = clWindow
-  DesignTimePPI = 144
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.8.0.6'
@@ -23,7 +22,7 @@ object Form3: TForm3
   end
   object Edit1: TEdit
     Left = 112
-    Height = 32
+    Height = 25
     Top = 72
     Width = 75
     TabOrder = 3
@@ -45,7 +44,7 @@ object Form3: TForm3
     Height = 160
     Top = 48
     Width = 310
-    Caption = 'Version : Banana 124 - 20180201'#13#10'https://github.com/BLumia/BLumiaTimidityShell'#13#10'This program is based on a Chrisoft Opensource Project program which called “Chirsoft Timidity Player” and that program is based on Timidity.'#13#10'Bear kids act cute!!!!!'#13#10'Oh.. You can still enjoy Fearii Cirno''s humor on this program LOL.'#13#10'                                      BLumia (c) 2014'
+    Caption = 'Version : Banana 125 - 20180313'#13#10'https://github.com/BLumia/BLumiaTimidityShell'#13#10'This program is based on a Chrisoft Opensource Project program which called “Chirsoft Timidity Player” and that program is based on Timidity.'#13#10'Bear kids act cute!!!!!'#13#10'Oh.. You can still enjoy Fearii Cirno''s humor on this program LOL.'#13#10'                                      BLumia (c) 2014'
     TabOrder = 1
   end
   object Button1: TButton
@@ -1877,17 +1876,17 @@ object Form3: TForm3
   end
   object Label1: TLabel
     Left = 368
-    Height = 24
+    Height = 17
     Top = 160
-    Width = 63
+    Width = 42
     Caption = 'BLumia'
     ParentColor = False
   end
   object Label2: TLabel
     Left = 461
-    Height = 24
+    Height = 17
     Top = 160
-    Width = 131
+    Width = 92
     Caption = 'Bear Kids Team'
     ParentColor = False
   end

@@ -7,10 +7,9 @@ object Form1: TForm1
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'BLumia''s Timidity Shell'
-  ClientHeight = 400
+  ClientHeight = 410
   ClientWidth = 778
   Color = clWindow
-  DesignTimePPI = 144
   Menu = MainMenu1
   OnActivate = FormActivate
   OnClose = FormClose
@@ -29,7 +28,7 @@ object Form1: TForm1
     Alignment = taCenter
     BorderStyle = sbsSingle
     Caption = 'No file Loaded.'
-    Font.Height = -13
+    Font.Height = -14
     ParentFont = False
     TabOrder = 0
   end
@@ -49,7 +48,7 @@ object Form1: TForm1
     Width = 112
     BorderStyle = sbsSingle
     Caption = '00:00'
-    Font.Height = -40
+    Font.Height = -41
     ParentFont = False
     TabOrder = 1
   end
@@ -981,9 +980,9 @@ object Form1: TForm1
   end
   object Label3: TLabel
     Left = 512
-    Height = 24
+    Height = 17
     Top = 80
-    Width = 164
+    Width = 109
     Caption = 'MenuItemsOnClick'
     ParentColor = False
     OnClick = Label3Click
@@ -1007,9 +1006,9 @@ object Form1: TForm1
   end
   object Label4: TLabel
     Left = 728
-    Height = 24
+    Height = 17
     Top = 80
-    Width = 59
+    Width = 39
     Caption = 'Debug'
     ParentColor = False
     OnClick = Label4Click
@@ -1038,9 +1037,9 @@ object Form1: TForm1
     end
     object Label5: TLabel
       Left = 8
-      Height = 24
+      Height = 17
       Top = 3
-      Width = 111
+      Width = 78
       Caption = '[V] Console : '
       ParentColor = False
     end
@@ -1069,9 +1068,9 @@ object Form1: TForm1
     end
     object Label6: TLabel
       Left = 8
-      Height = 24
+      Height = 17
       Top = 3
-      Width = 113
+      Width = 77
       Caption = '[V] Play List : '
       ParentColor = False
     end
